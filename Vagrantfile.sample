@@ -1,0 +1,33 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.ssh.username = 'root'
+  config.ssh.pty      = true
+
+  config.vm.provider :conoha do |conoha|
+    conoha.openstack_auth_url = 'https://identity.tyo1.conoha.io/v2.0'
+
+    # API の設定
+    conoha.username           = 'XXXX12345678'
+    conoha.password           = 'YOUR_API_PASSWORD'
+    conoha.tenant_name        = 'YYYY12345678'
+
+    conoha.flavor             = 'g-512mb'
+    conoha.image              = 'vmi-centos-7.4-amd64-20gb'
+
+    # VPS の設定
+    root_user_password        = "YOUR_ROOT_ACCOUNT_PASSWORD"
+    instance_name_tag         = "YOUR_CONOHA_INSTANCE_NAME"
+
+    conoha.region             = "tyo1"
+    conoha.admin_pass         = root_user_password
+    conoha.metadata           = {
+      instance_name_tag: instance_name_tag
+    }
+    conoha.security_groups    = [
+      "default",
+      "gncs-ipv4-all",
+      "gncs-ipv6-all",
+    ]
+  end
+end
